@@ -53,6 +53,36 @@ Node* findmin(Node* raiz) {
     
 }
 
+Node* removeHelper(Node* node, int value) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+        
+        if (value < node->key) {
+            node->left = removeHelper(node->left, value);
+        } else if (value > node->key) {
+            node->right = removeHelper(node->right, value);
+        } else {
+            // Nó com apenas um filho ou nenhum
+            if (node->left == nullptr) {
+                Node* temp = node->right;
+                delete node;
+                return temp;
+            } else if (node->right == nullptr) {
+                Node* temp = node->left;
+                delete node;
+                return temp;
+            }
+
+            // Nó com dois filhos: pegar o sucessor in-order (menor na subárvore direita)
+            Node* temp = findmin(node->right);
+            node->key = temp->key;
+            node->right = removeHelper(node->right, temp->key);
+        }
+        
+        return node;
+    }
+
 
 
 int main() {
@@ -66,10 +96,16 @@ int main() {
     raiz = insert(raiz, 80);
 
 
-   Node* x = findmin(raiz);
+Node* x = findmin(raiz);
 
-   cout<<x->key;
-
+   
+Node *y = search(raiz, 20);
+if (y != nullptr) {
+    cout << y->key << endl;
+} else {
+    cout << "Nenhum no encontrado" << endl;
+}
+    
 
 
 
